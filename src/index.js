@@ -1,4 +1,5 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 const port = 3000;
 
@@ -10,7 +11,6 @@ app.use(express.json());
 // If necessary to add imports, please do so in the section above
 
 let users = [];
-let currID = 1;
 
 app.post('/users', (req, res) => {
     const { name, email } = req.body;
@@ -20,7 +20,7 @@ app.post('/users', (req, res) => {
     }
 
     const newUser = {
-        id: currID++,
+        id: uuidv4(),
         name: name,
         email: email
     }
@@ -30,7 +30,7 @@ app.post('/users', (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-   const userID = parseInt(req.params.id);
+   const userID = req.params.id;
 
    const user = users.find(u => u.id === userID);
    if (!user){
@@ -41,7 +41,7 @@ app.get("/users/:id", (req, res) => {
 });
 
 app.put("/users/:id", (req, res) => {
-    const userID = parseInt(req.params.id);
+    const userID = req.params.id;
     const { name, email } = req.body;
 
     if (!name || !email) {
@@ -63,7 +63,7 @@ app.put("/users/:id", (req, res) => {
 })
 
 app.delete("/users/:id", (req, res) => {
-    const userID = parseInt(req.params.id);
+    const userID = req.params.id;
 
     const userIdx = users.findIndex(u => u.id === userID);
     if (userIdx === -1){
